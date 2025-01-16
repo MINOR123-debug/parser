@@ -28,7 +28,7 @@ try:
 except FileNotFoundError:
     allowed_users = []
 
-ADMIN_IDS = [1332517469, 6395768505]
+ADMIN_IDS = [1332517469 , 6395768505]
 
 def save_allowed_users():
     with open("pay.json", "w", encoding="utf-8") as f:
@@ -170,12 +170,7 @@ async def handle_parser_button(callback: CallbackQuery):
     Обробка натискання кнопки з callback_data "parser".
     """
     user_id = callback.from_user.id
-
-    # Перевірка доступу
-    if user_id not in ADMINS:
-        await callback.message.answer("❌ У вас немає доступу до цієї функції. Зверніться до адміністратора.")
-        return
-
+    
     # Просимо користувача надіслати посилання
     await callback.message.answer("📥 Відправте посилання на канал (має починатися з 'https://').")
     user_parsing_state[user_id] = {'awaiting_link': True}  # Ставимо стан очікування посилання
@@ -210,11 +205,6 @@ async def cmd_parser(message: types.Message, command: CommandObject):
     Основна функція парсингу.
     """
     user_id = message.from_user.id
-
-    # Перевірка доступу
-    if user_id not in ADMINS:
-        await message.answer("❌ У вас немає доступу до цієї функції. Зверніться до адміністратора.")
-        return
 
     # Отримання посилання з аргументів команди
     channel_url = command.args.strip() if command.args else None
@@ -266,7 +256,7 @@ async def cmd_parser(message: types.Message, command: CommandObject):
         print(f"Помилка при парсингу: {e}")
     finally:
         user_parsing_state[user_id] = {'parsing': False}
-        await message.answer("✔️ Процес парсингу завершено. Перед наступним запуском очистіть список за допомогою команди /clear.")
+        await message.answer("✔️")
 
 
 
@@ -320,7 +310,7 @@ def read_subscribers():
         return []
 
 # Список адміністраторів
-ADMINS = [1332517469, 7689890294]  # Замініть на реальні ID адміністраторів
+ADMINS = [1332517469, 6395768505]  # Замініть на реальні ID адміністраторів
 
 def clear_subscribers():
     """
@@ -336,11 +326,6 @@ async def handle_view_subscribers(callback: CallbackQuery):
     Відображає список підписників із файлу.
     """
     user_id = callback.from_user.id
-
-    # Перевірка прав адміністратора
-    if user_id not in ADMINS:
-        await callback.message.answer("У вас немає прав доступу до цієї функції. ❌")
-        return
 
     # Читаємо список підписників із файлу
     try:
@@ -400,11 +385,6 @@ async def handle_view_subscribers(callback: CallbackQuery):
 async def handle_clear_subscribers(callback: CallbackQuery):
     user_id = callback.from_user.id
 
-    # Перевірка доступу
-    if user_id not in ADMINS:
-        await callback.message.answer("У вас немає прав доступу до цієї функції. ❌")
-        return
-
     # Очищаємо список підписників
     clear_subscribers()
 
@@ -445,11 +425,6 @@ def create_export_file():
 @parser_router.callback_query(lambda c: c.data == "fp")
 async def handle_export_subscribers(callback: CallbackQuery):
     user_id = callback.from_user.id
-
-    # Перевірка доступу
-    if user_id not in ADMINS:
-        await callback.message.answer("У вас немає прав доступу до цієї функції. ❌")
-        return
 
     # Створення файлу для експорту
     create_export_file()
