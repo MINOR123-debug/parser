@@ -28,7 +28,7 @@ try:
 except FileNotFoundError:
     allowed_users = []
 
-ADMIN_IDS = [1332517469 , 6395768505]
+ADMIN_IDS = [1332517469, 6395768505]
 
 def save_allowed_users():
     with open("pay.json", "w", encoding="utf-8") as f:
@@ -163,14 +163,13 @@ async def remove_user(message: types.Message, command: CommandObject):
 
 from aiogram.types import CallbackQuery, Message, InlineKeyboardButton, InlineKeyboardMarkup
 
-
 @parser_router.callback_query(lambda c: c.data == "parser")
 async def handle_parser_button(callback: CallbackQuery):
     """
     Обробка натискання кнопки з callback_data "parser".
     """
     user_id = callback.from_user.id
-    
+
     # Просимо користувача надіслати посилання
     await callback.message.answer("📥 Відправте посилання на канал (має починатися з 'https://').")
     user_parsing_state[user_id] = {'awaiting_link': True}  # Ставимо стан очікування посилання
@@ -256,8 +255,7 @@ async def cmd_parser(message: types.Message, command: CommandObject):
         print(f"Помилка при парсингу: {e}")
     finally:
         user_parsing_state[user_id] = {'parsing': False}
-        await message.answer("✔️")
-
+        await message.answer("✔️ Процес парсингу завершено. Перед наступним запуском очистіть список за допомогою команди /clear.")
 
 
 
@@ -309,16 +307,12 @@ def read_subscribers():
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
-# Список адміністраторів
-ADMINS = [1332517469, 6395768505]  # Замініть на реальні ID адміністраторів
-
 def clear_subscribers():
     """
     Очищає список підписників у файлі.
     """
     with open(SUBSCRIBERS_FILE, "w", encoding="utf-8") as file:
         json.dump([], file)
-
 
 @parser_router.callback_query(lambda c: c.data == "sp")
 async def handle_view_subscribers(callback: CallbackQuery):
@@ -377,8 +371,7 @@ async def handle_view_subscribers(callback: CallbackQuery):
         await callback.message.answer(current_message)
 
     # Повідомлення про завершення
-    await callback.message.answer("✅ Список підписників виданий." , reply_markup=kb.bay)
-
+    await callback.message.answer("✅ Список підписників виданий.", reply_markup=kb.bay)
 
 # Обробник для callback_data
 @parser_router.callback_query(lambda c: c.data == "op")
@@ -389,7 +382,7 @@ async def handle_clear_subscribers(callback: CallbackQuery):
     clear_subscribers()
 
     # Повідомлення про успішне очищення
-    await callback.message.answer("✅ Список підписників очищено! можете спарсити ще раз✅" , reply_markup=kb.bay1)
+    await callback.message.answer("✅ Список підписників очищено! можете спарсити ще раз ✅", reply_markup=kb.bay1)
 
 
 #файл 
